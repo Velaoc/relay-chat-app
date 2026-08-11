@@ -1,0 +1,46 @@
+<% title "Chat" %>
+<%= tag.div data: { controller: "chat" } do %>
+  <div class="chat-layout">
+    <aside class="chat-sidebar" aria-label="Conversations">
+      <div class="chat-sidebar__header">
+        <h1 class="md-type-title">Relay</h1>
+        <%= button_to "New chat", conversations_path, method: :post, class: "md-button md-button--filled md-button--small", form_class: "chat-new-form" %>
+      </div>
+
+      <nav class="chat-convo-list">
+        <% @conversations.each do |c| %>
+          <div class="chat-convo-item <%= 'is-active' if @conversation&.id == c.id %>">
+            <%= link_to c.title_or_default, conversation_path(c), class: "chat-convo-link", data: { turbo: false } %>
+            <%= button_to "✕", conversation_path(c), method: :delete, class: "chat-convo-delete", title: "Delete conversation", aria: { label: "Delete conversation" } %>
+          </div>
+        <% end %>
+      </nav>
+    </aside>
+
+    <main class="chat-main" id="main-content">
+      <% if @conversation %>
+        <header class="chat-thread-header">
+          <h2><%= @conversation.title_or_default %></h2>
+          <span class="md-type-label"><%= Chat::Provider.build.model_name %></span>
+        </header>
+
+        <div class="chat-thread" data-chat-target="thread" aria-live="polite">
+          <% (@messages || []).each do |m| %>
+            <%= render "message", message: m %>
+          <% end %>
+        </div>
+
+        <%= form_with model: [@conversation, Message.new], url: conversation_messages_path(@conversation), data: { chat_target: "form" }, class: "chat-composer" do |f| %>
+          <%= f.text_area :content, placeholder: "Message Relay…", rows: 1, class: "md-field__input chat-composer__input", data: { chat_target: "input" }, aria: { label: "Message" } %>
+          <%= f.submit "Send", class: "md-button md-button--filled", data: { chat_target: "submit" } %>
+        <% end %>
+      <% else %>
+        <div class="chat-empty">
+          <h2>Start a conversation</h2>
+          <p>Ask anything. Replies stream in as they're generated.</p>
+          <%= button_to "New chat", conversations_path, method: :post, class: "md-button md-button--filled" %>
+        </div>
+      <% end %>
+    </main>
+  </div>
+<% end %>
