@@ -5,7 +5,10 @@ import { application } from "controllers/application"
 import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading"
 eagerLoadControllersFrom("controllers", application)
 
-// Chat (Relay) — registered explicitly so it works even though its name
-// doesn't end in _controller.
+// Chat (Relay) — the controller file is named chat_controller.js so eager
+// loading already registers it as "chat"; the explicit register below is a
+// harmless no-op safety net if eager loading ever changes.
 import ChatController from "controllers/chat_controller"
-application.register("chat", ChatController)
+if (!application.router.modulesByIdentifier.has("chat")) {
+  application.register("chat", ChatController)
+}
