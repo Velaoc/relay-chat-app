@@ -1,0 +1,55 @@
+{
+  "name": "Relay",
+  "purpose": "A ChatGPT-style chat application where signed-in users start conversations, send messages, and see AI replies stream back through a provider adapter.",
+  "actors": [
+    "Visitor",
+    "Signed-in user"
+  ],
+  "entities": [
+    {
+      "name": "User",
+      "relationships": [
+        "has many conversations"
+      ]
+    },
+    {
+      "name": "Conversation",
+      "relationships": [
+        "belongs to user",
+        "has many messages"
+      ]
+    },
+    {
+      "name": "Message",
+      "relationships": [
+        "belongs to conversation",
+        "role is user or assistant"
+      ]
+    }
+  ],
+  "workflows": [
+    {
+      "name": "Sign in",
+      "description": "User authenticates via email/password (or OAuth where configured) and lands on their conversations."
+    },
+    {
+      "name": "Start a conversation",
+      "description": "User creates a new conversation and is taken to it."
+    },
+    {
+      "name": "Send a message and stream a reply",
+      "description": "User posts a message; the AI provider adapter streams back a reply token by token."
+    },
+    {
+      "name": "View history",
+      "description": "User sees past conversations with their message transcripts."
+    }
+  ],
+  "integrations": [
+    {
+      "name": "llm_provider",
+      "demo_adapter": true
+    }
+  ],
+  "seed_demo": "One demo user with a sample conversation containing a couple of user/assistant messages so the UI shows real content immediately."
+}
