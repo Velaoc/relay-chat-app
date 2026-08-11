@@ -1,0 +1,4 @@
+<article class="chat-msg chat-msg--<%= message.role %>" data-role="<%= message.role %>">
+  <div class="chat-msg__avatar" aria-hidden="true"><%= message.role == "user" ? "You" : "R" %></div>
+  <div class="chat-msg__bubble"><%= simple_format(message.content) %></div>
+</article>
