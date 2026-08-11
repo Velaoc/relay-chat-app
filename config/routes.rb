@@ -55,7 +55,11 @@ Rails.application.routes.draw do
     mount MissionControl::Jobs::Engine => "/admin/jobs", as: :admin_jobs
   end
 
-  # Versioned legal documents (SPEC M2.4).
+  # Versioned legal documents (SPEC M2.4).  # Chat (Relay). Authenticated conversations with streamed AI replies.
+  resources :conversations, only: %i[index create show destroy] do
+    resources :messages, only: :create
+  end
+
   get "legal/terms",   to: "foundation/legal#terms",   as: :legal_terms
   get "legal/privacy", to: "foundation/legal#privacy", as: :legal_privacy
 
